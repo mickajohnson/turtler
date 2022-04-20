@@ -7,52 +7,42 @@ import "turtle"
 import "car"
 import "lToRCar"
 import "prize"
+import "game"
+import "wall"
 
 -- TODO
+-- Add reset method to game object
 -- redraw coin after die
--- tilemap
 -- player cannot exceed edge
+-- tilemap
+
+TURTLE_GROUP = 1
+WALL_GROUP = 2
+CAR_GROUP = 3
+PRIZE_GROUP = 4
 
 local gfx <const> = playdate.graphics
 local pd <const> = playdate
 
-local turtleSprite = nil
+local game = nil
 
 local function initialize() 
-    turtleSprite = Turtle()
-    turtleSprite:add()
+    game = Game()
 
-    Car(430, 60, 5, 30)
-    Car(200, 60, 5, 30)
-
-    LToRCar(-30, 100, 3, 40)
-    LToRCar(100, 100, 3, 40)
-    LToRCar(240, 100, 3, 40)
-
-    Car(430, 140, 7, 20)
-    Car(250, 140, 7, 20)
-    Car(300, 140, 7, 30)
-
-    LToRCar(-30, 180, 5, 50)
-    LToRCar(200, 180, 5, 50)
-
-    Prize(150, 10)
-    Prize(200, 10)
-    Prize(250, 10)
+    local backgroundImage = gfx.image.new("images/background")
+    gfx.sprite.setBackgroundDrawingCallback(
+        function(x, y, width, height)
+            gfx.setClipRect(x, y, width, height)
+            backgroundImage:draw(0, 0)
+            gfx.clearClipRect()
+        end
+    )
 end
 
 initialize()
 
-function playdate.update() 
+function playdate.update()
     gfx.sprite.update()
     pd.timer.updateTimers()
-
-    if turtleSprite.score == 3 then
-        gfx.drawText("You Win!", 320, 5)
-    elseif turtleSprite.lives > 0 then
-        gfx.drawText("Lives: " .. turtleSprite.lives, 320, 5)
-    else
-        gfx.drawText("Game Over", 320, 5)
-    end
-
+    game:update()
 end

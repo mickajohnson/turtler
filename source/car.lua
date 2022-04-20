@@ -8,6 +8,8 @@ function Car:init(x, y, speed, width)
   self.moveSpeed = speed
   self.startingX = x
   self.startingY = y
+
+  self:setGroups(CAR_GROUP)
   
   self:moveTo(self.startingX, self.startingY)
   local carImage = gfx.image.new(width, 30)
